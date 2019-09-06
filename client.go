@@ -38,6 +38,17 @@ type Client struct {
 	AfterRequest func(module, action string, param map[string]interface{}, outcome interface{}, requestErr error)
 }
 
+func NewWithTimeout(network Network, APIKey string, timeout int) *Client  {
+	return &Client{
+		coon: &http.Client{
+			Timeout: time.Duration(timeout) * time.Second,
+		},
+		network: network,
+		key:     APIKey,
+		baseURL: fmt.Sprintf(`https://%s.etherscan.io/api?`, network.SubDomain()),
+	}
+}
+
 // New initialize a new etherscan API client
 // please use pre-defined network value
 func New(network Network, APIKey string) *Client {
